@@ -4,7 +4,7 @@
             <img :src="require(`../../../assets/logo-pixel.gif`)">
         </div>
         <input class="search" type="text" v-model="searchText" placeholder="Search for pokemon..." @input="handleInput" />
-        <!-- <h1>Pokemon</h1> -->
+        <h1>Favorite Pokemon</h1>
         <!-- <p v-for="f in favouritedPokemonList" :key="f">
             {{ f }}
         </p> -->
@@ -51,7 +51,7 @@
 import { RouteHandler } from '@/router';
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
-import Configuration from '@/Configuration';
+// import Configuration from '@/Configuration';
 // import favouritedList from '@/assets/favouritedList.json'
 import PokemonTypeChip from './PokemonTypeChip.vue';
 
@@ -77,7 +77,6 @@ export default {
         //     this.noOfPages = 1;
         //     return Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
         // },
-
         pokemons() {
             return PokemonTableDataHandler.getItems(this);
         },
@@ -99,81 +98,19 @@ export default {
         // },
     },
     async created() {
-        this.noOfPages = Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
         await fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
             for (var i = 0; i < result.length; i++) {
                 this.favouritedPokemonList.push(result[i].id);
             }
+        }).then(() => {
+            this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
         }).catch(err => console.log("err ", err))
-        await PokemonStoreHttpRequest.refreshData(this);
-
-        // await fetch('http://localhost:3001/ids')
-        //     .then(res => {
-        //         console.log("res", res);
-        //         res.json();
-        //     })
-        //     .then(data => {
-        //         console.log('data ::=> ', data);
-        //         // this.studentsGetData = data
-        //     })
-        //     .catch(err =>
-        //         console.log("err ", err))
-
-        // await fetch('http://localhost:3001/ids', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         "id": 4
-        //     })
-        // })
-
-        // await fetch('http://localhost:3001/ids', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         "id": 3
-        //     })
-        // })
-
-
-        // await fetch(`http://localhost:3001/ids/3`,
-        //     {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then(resp => {
-        //         console.log('res ::=> ', resp.data);
-        //         resp.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-
-        // await fetch(`http://localhost:3001/ids/1`,
-        //     {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then(resp => {
-        //         console.log('res ::=> ', resp.data);
-        //         resp.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
+        await PokemonStoreHttpRequest.refreshFavoriteData(this);
     },
     methods: {
         onChangePageNumber(pageNumber) {
             PokemonTableDataHandler.setPageNumber(this, pageNumber);
-            PokemonStoreHttpRequest.refreshData(this);
+            PokemonStoreHttpRequest.refreshFavoriteData(this);
         },
 
         onClickRow(pokemon) {
@@ -181,9 +118,6 @@ export default {
             this.$emit('clickRow', pokemon);
         },
         async onClickFavorite(pokemon) {
-            // PokemonTableDataHandler.setFavoritePokemon(this, pokemon);
-            // this.$emit('clickFavorite', pokemon);
-
             if (this.favouritedPokemonList.includes(pokemon.id)) {
                 await fetch(`http://localhost:3001/ids/${pokemon.id}`,
                     {
@@ -201,14 +135,15 @@ export default {
                             for (var i = 0; i < result.length; i++) {
                                 this.favouritedPokemonList.push(result[i].id);
                             }
+                        }).then(() => {
+                            this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
                         })
                             .catch(err => console.log("err ", err));
-                        PokemonStoreHttpRequest.refreshData(this);
+                        PokemonStoreHttpRequest.refreshFavoriteData(this);
 
                     }).catch(error => {
                         console.log(error);
                     });
-
             } else {
                 await fetch('http://localhost:3001/ids', {
                     method: 'POST',
@@ -225,8 +160,10 @@ export default {
                         for (var i = 0; i < result.length; i++) {
                             this.favouritedPokemonList.push(result[i].id);
                         }
+                    }).then(() => {
+                        this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
                     }).catch(err => console.log("err ", err));
-                    PokemonStoreHttpRequest.refreshData(this);
+                    PokemonStoreHttpRequest.refreshFavoriteData(this);
                 })
             }
         },
@@ -237,19 +174,20 @@ export default {
         },
 
         async handleInput(event) {
-            console.log(event.target.value);
             const pokemonNameStrg = event.target.value.toLowerCase().trim();
             if (pokemonNameStrg.length > 0) {
                 await PokemonStoreHttpRequest.filterDataByName(this, event.target.value);
                 this.noOfPages = 1;
             } else {
-                this.noOfPages = Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
+                // this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
                 await fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
                     for (var i = 0; i < result.length; i++) {
                         this.favouritedPokemonList.push(result[i].id);
                     }
+                }).then(() => {
+                    this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
                 }).catch(err => console.log("err ", err))
-                await PokemonStoreHttpRequest.refreshData(this);
+                await PokemonStoreHttpRequest.refreshFavoriteData(this);
             }
         }
     }

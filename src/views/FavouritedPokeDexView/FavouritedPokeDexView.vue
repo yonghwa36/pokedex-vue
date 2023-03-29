@@ -1,26 +1,28 @@
 <template>
     <div>
-        <h2>Favorite Pokemon</h2>
+        <pokemon-table @clickRow="onClickTableRow()"></pokemon-table>
+        <pokemon-details-dialog v-model="shouldShowPokemonDetailsDialog"></pokemon-details-dialog>
     </div>
 </template>
 
 <script>
+import PokemonTable from './components/PokemonTable.vue';
+import PokemonDetailsDialog from './components/PokemonDetailsDialog.vue';
+
 export default {
     components: {
-    },
-    async created() {
-        await fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
-            for (var i = 0; i < result.length; i++) {
-                this.favouritedPokemonList.push(result[i].id);
-            }
-        }).catch(err => console.log("err ", err))
+        'pokemon-table': PokemonTable,
+        'pokemon-details-dialog': PokemonDetailsDialog
     },
 
-    data() {
-        return { favouritedPokemonList: [] };
-    },
+    data: () => ({
+        shouldShowPokemonDetailsDialog: false
+    }),
 
     methods: {
+        onClickTableRow() {
+            this.shouldShowPokemonDetailsDialog = true;
+        }
     }
 };
 </script>
