@@ -2,6 +2,7 @@ import StoreMutationsType from '@/store/StoreMutationsType';
 
 export const PokemonTableDataHandler = {
     getItems(context) {
+        state.favoritedPokemon = sessionStorage.getItem('favouritedList') === null ? [] : sessionStorage.getItem('favouritedList').split(',');
         return context.$store.getters.items;
     },
 
@@ -29,8 +30,36 @@ export const PokemonTableDataHandler = {
         return context.$store.getters.selectedPokemon;
     },
 
+    getSelectedPokemonById() {
+        var pokemonId = sessionStorage.getItem('selectedPokemon');
+        return pokemonId;
+    },
+
     setSelectedPokemon(context, selectedPokemon) {
+        sessionStorage.setItem('selectedPokemon', selectedPokemon.id)
         context.$store.commit(StoreMutationsType.SET_SELECTED_POKEMON, selectedPokemon);
+    },
+
+    getFavoritedPokemon() {
+        return state.favoritedPokemon;
+    },
+
+    setFavoritePokemon(context, selectedPokemon) {
+        sessionStorage.removeItem('favouritedList');
+        if (state.favoritedPokemon.includes(selectedPokemon.id)) {
+            const indexInArray = state.favoritedPokemon.indexOf(selectedPokemon.id);
+            state.favoritedPokemon.splice(indexInArray, 1);
+        } else {
+            context.$store.commit(StoreMutationsType.SET_FAVORITED_POKEMON, selectedPokemon);
+        }
+
+        sessionStorage.setItem('favouritedList', state.favoritedPokemon);
+    },
+
+    getFavoritedPokemonList(context) {
+        // var temp = context.$store.getters.items;
+        state.favoritedPokemon = sessionStorage.getItem('favouritedList') === null ? [] : sessionStorage.getItem('favouritedList').split(',');
+        return context.$store.getters.items;
     },
 
     isLoading(context) {
@@ -43,15 +72,24 @@ export const PokemonTableDataHandler = {
 
     stopLoading(context) {
         context.$store.commit(StoreMutationsType.SET_POKEMON_TABLE_LOADING_OFF);
-    }
+    },
+
+    // getFavoritedItems() {
+    //     let favoritedPokemon = state.items;
+    //     console.log("favoritedPokemon", state.items);
+    //     console.log("favoritedPokemon", state.items.filter(x => x.id === favoritedPokemon));
+    //     return state.items.filter(x => x.id === favoritedPokemon);
+    // }
 };
 
 const state = {
     items: [],
     pageNumber: 1,
-    pageSize: 5,
+    pageSize: 15,
     selectedPokemon: null,
-    loading: false
+    loading: false,
+    favoritedPokemon: [],
+
 };
 
 const getters = {
@@ -99,7 +137,15 @@ const mutations = {
 
     [StoreMutationsType.SET_POKEMON_TABLE_LOADING_OFF]: (state) => {
         state.loading = false;
-    }
+    },
+
+    [StoreMutationsType.SET_FAVORITED_POKEMON]: (state, selectedPokemon) => {
+        state.favoritedPokemon.push(selectedPokemon.id);
+    },
+
+    [StoreMutationsType.GET_FAVORITED_POKEMON]: (state) => {
+        state.items = state.items.filter(x => state.favoritedPokemon.includes(x));
+    },
 };
 
 export default {

@@ -12,13 +12,11 @@
     "pokedex": "PokéDex",
     "type": "Type",
     "weight": "Weight",
-
     "aboutPage": {
         "linkMessage": "Code on GitHub",
         "message": "This PokeDéx is an application demo using VueJS 2 created by Samir Sales.",
         "title": "Hello!"
     },
-
     "pokemonPointType": {
         "attack": "Attack",
         "defense": "Defense",
@@ -27,7 +25,6 @@
         "special-defense": "Special defense",
         "speed": "Speed"
     },
-
     "pokemonType": {
         "bug": "bug",
         "dark": "dark",
@@ -47,5 +44,8 @@
         "rock": "rock",
         "steel": "steel",
         "water": "water"
-    }
+    },
+    "home": "Home",
+    "next": "Next",
+    "previous": "Previous"
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Pokemon</h1>
+        <h1>Pokemon Details</h1>
         <v-simple-table dense>
             <template v-slot:default>
                 <thead>
@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import { RouteHandler } from '@/router';
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
 import Configuration from '@/Configuration';
@@ -106,8 +105,6 @@ export default {
         },
         onClickViewDetails(pokemon) {
             PokemonTableDataHandler.setSelectedPokemon(this, pokemon);
-            RouteHandler.goToDetailsPage(this);
-
         }
     }
 };

@@ -12,13 +12,11 @@
     "pokedex": "PokéDex",
     "type": "Tapez",
     "weight": "Poids",
-
     "aboutPage": {
         "linkMessage": "Code sur GitHub",
         "message": "Ce PokeDéx est une démo d'application utilisant VueJS 2 créée par Samir Sales.",
         "title": "Bonjour!"
     },
-
     "pokemonPointType": {
         "attack": "Attaque",
         "defense": "Défense",
@@ -27,7 +25,6 @@
         "special-defense": "Défense spéciale",
         "speed": "Vitesse"
     },
-
     "pokemonType": {
         "bug": "insecte",
         "dark": "sombre",
@@ -47,5 +44,8 @@
         "rock": "roche",
         "steel": "acier",
         "water": "l'eau"
-    }
+    },
+    "home": "Home",
+    "next": "Next",
+    "previous": "Previous"
 }

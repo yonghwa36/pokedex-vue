@@ -2,6 +2,9 @@
     <v-app-bar app color="red" dark>
         <div class="d-flex align-center">
             <v-toolbar-title>{{ $t('pokedex') }}</v-toolbar-title>
+            <!-- <v-toolbar-title>
+                <img :src="require(`../../assets/logo-pixel-shine.gif`)">
+            </v-toolbar-title> -->
         </div>
 
         <v-spacer></v-spacer>

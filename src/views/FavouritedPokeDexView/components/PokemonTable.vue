@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Pokemon</h1>
+        <h1>Favorited Pokemon</h1>
         <v-simple-table dense>
             <template v-slot:default>
                 <thead>
@@ -24,9 +24,7 @@
                             <pokemon-type-chip v-for="type in pokemon.types" :type="type.type.name"
                                 :key="type.type.name + pokemon.id"></pokemon-type-chip>
                         </td>
-                        <td><v-btn @click="onClickRow(pokemon)">View</v-btn>
-                            <v-btn @click="onClickViewDetails(pokemon)">View2</v-btn>
-                        </td>
+                        <td><v-btn @click="onClickRow(pokemon)">View</v-btn> </td>
                         <td>
                             <v-btn icon @click="onClickFavorite(pokemon)">
                                 <v-icon v-if="!favoritedPokemon.includes(pokemon.id)">mdi-heart</v-icon>
@@ -49,7 +47,6 @@
 </template>
 
 <script>
-import { RouteHandler } from '@/router';
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
 import Configuration from '@/Configuration';
@@ -67,7 +64,7 @@ export default {
         },
 
         pokemons() {
-            return PokemonTableDataHandler.getItems(this);
+            return PokemonTableDataHandler.getFavoritedPokemonList(this);
         },
 
         pageNumber() {
@@ -101,13 +98,7 @@ export default {
         },
         onClickFavorite(pokemon) {
             PokemonTableDataHandler.setFavoritePokemon(this, pokemon);
-
             this.$emit('clickFavorite', pokemon);
-        },
-        onClickViewDetails(pokemon) {
-            PokemonTableDataHandler.setSelectedPokemon(this, pokemon);
-            RouteHandler.goToDetailsPage(this);
-
         }
     }
 };

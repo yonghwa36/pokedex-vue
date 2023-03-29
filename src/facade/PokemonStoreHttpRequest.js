@@ -20,5 +20,25 @@ export default {
             .then(() => {
                 PokemonTableDataHandler.stopLoading(context);
             });
+    },
+    getPokemonDataById(context, selectedPokemonId) {
+        let pokemonId = 0;
+        if (selectedPokemonId == 0) {
+            pokemonId = sessionStorage.getItem('selectedPokemon');
+        } else {
+            pokemonId = selectedPokemonId;
+        }
+
+        PokemonHttpRequest.getByNameOrId(pokemonId)
+            .then((pokemons) => {
+                PokemonTableDataHandler.setSelectedPokemon(context, pokemons);
+            })
+            .catch((error) => {
+                ErrorDialogHandler.showError(context, error);
+                PokemonTableDataHandler.stopLoading(context);
+            })
+            .then(() => {
+                PokemonTableDataHandler.stopLoading(context);
+            });
     }
 };
