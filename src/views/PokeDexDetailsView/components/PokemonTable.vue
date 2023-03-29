@@ -52,7 +52,6 @@
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
 import Configuration from '@/Configuration';
-
 import PokemonTypeChip from './PokemonTypeChip.vue';
 
 export default {

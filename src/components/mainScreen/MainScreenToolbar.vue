@@ -1,19 +1,24 @@
 <template>
     <v-app-bar app color="red" dark>
         <div class="d-flex align-center">
-            <v-toolbar-title>{{ $t('pokedex') }}</v-toolbar-title>
+            <v-toolbar-title @click="onClickGoToHome()">{{ $t('pokedex') }}</v-toolbar-title>
             <!-- <v-toolbar-title>
                 <img :src="require(`../../assets/logo-pixel-shine.gif`)">
             </v-toolbar-title> -->
         </div>
-
         <v-spacer></v-spacer>
-
         <v-btn icon @click="onClickInfoIconButton()">
             <v-icon>mdi-information-outline</v-icon>
         </v-btn>
-
         <v-menu left bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" outlined @click="onClickGoToFavorite()">
+                    {{ $t('favorite') }}
+                </v-btn>
+            </template>
+        </v-menu>
+
+        <!-- <v-menu left bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" outlined>
                     {{ currentIdiomText }}
@@ -28,7 +33,7 @@
                     </v-list-item-title>
                 </v-list-item>
             </v-list>
-        </v-menu>
+        </v-menu> -->
     </v-app-bar>
 </template>
 
@@ -65,6 +70,14 @@ export default {
 
         onClickInfoIconButton() {
             RouteHandler.goToAboutPage(this);
+        },
+
+        onClickGoToHome() {
+            RouteHandler.goToHomePage(this);
+        },
+
+        onClickGoToFavorite() {
+            RouteHandler.goToFavoritedPage(this);
         }
     }
 };
