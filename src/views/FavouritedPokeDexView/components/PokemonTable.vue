@@ -51,8 +51,6 @@
 import { RouteHandler } from '@/router';
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
-// import Configuration from '@/Configuration';
-// import favouritedList from '@/assets/favouritedList.json'
 import PokemonTypeChip from './PokemonTypeChip.vue';
 
 export default {
@@ -67,16 +65,8 @@ export default {
         };
     },
     watch: {
-        // noOfPages: function (val) {
-        //     console.log("val ", val);
-
-        // }
     },
     computed: {
-        // numberOfPages() {
-        //     this.noOfPages = 1;
-        //     return Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
-        // },
         pokemons() {
             return PokemonTableDataHandler.getItems(this);
         },
@@ -92,10 +82,6 @@ export default {
         isLoading() {
             return PokemonTableDataHandler.isLoading(this);
         },
-
-        // favoritedPokemon() {
-        //     return PokemonTableDataHandler.getFavoritedPokemon();
-        // },
     },
     async created() {
         await fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
@@ -127,7 +113,8 @@ export default {
                             'Content-Type': 'application/json'
                         }
                     }).then(resp => {
-                        console.log('res ::=> ', resp.data);
+                        console.log(resp);
+
                         const indexInArray = this.favouritedPokemonList.indexOf(pokemon.id);
                         this.favouritedPokemonList.splice(indexInArray, 1);
 
@@ -155,7 +142,7 @@ export default {
                         "id": pokemon.id
                     })
                 }).then(resp => {
-                    console.log('res ::=> ', resp.data);
+                    console.log(resp);
                     fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
                         for (var i = 0; i < result.length; i++) {
                             this.favouritedPokemonList.push(result[i].id);
@@ -179,7 +166,6 @@ export default {
                 await PokemonStoreHttpRequest.filterDataByName(this, event.target.value);
                 this.noOfPages = 1;
             } else {
-                // this.noOfPages = Math.ceil(this.favouritedPokemonList.length / this.pageSize);
                 await fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
                     for (var i = 0; i < result.length; i++) {
                         this.favouritedPokemonList.push(result[i].id);

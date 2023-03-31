@@ -3,13 +3,13 @@ import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import { ErrorDialogHandler } from '@/store/modules/errorDialog';
 
 export default {
-    refreshData(context) {
+    refreshData(context, sortColumn) {
         const pageNumber = PokemonTableDataHandler.getPageNumber(context);
         const pageSize = PokemonTableDataHandler.getPageSize(context);
 
         PokemonTableDataHandler.startLoading(context);
 
-        PokemonHttpRequest.getPageByNumberAndSize(pageNumber, pageSize)
+        PokemonHttpRequest.getPageByNumberAndSize(pageNumber, pageSize, sortColumn)
             .then((pokemons) => {
                 PokemonTableDataHandler.setItems(context, pokemons);
             })
@@ -42,7 +42,6 @@ export default {
             });
     },
     async filterDataByName(context, pokemonName) {
-        console.log("context ", context);
         const pokemonNameStrg = pokemonName.toLowerCase().trim();
         if (pokemonNameStrg.length > 0) {
             const pageNumber = PokemonTableDataHandler.getPageNumber(context);
@@ -50,15 +49,8 @@ export default {
 
             await PokemonTableDataHandler.startLoading(context);
 
-            // const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`);
-            // const json = await data.json();
-            // console.log("json ", json);
-            // await PokemonTableDataHandler.setItems(context, json);
-            await PokemonTableDataHandler.stopLoading(context);
-
             PokemonHttpRequest.getPokemonByName(pokemonNameStrg, pageNumber, pageSize)
                 .then((pokemons) => {
-                    console.log("pokemons ", pokemons);
                     PokemonTableDataHandler.setItems(context, pokemons);
                 })
                 .catch(() => {

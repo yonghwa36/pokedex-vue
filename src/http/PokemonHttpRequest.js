@@ -6,7 +6,7 @@ import PokemonEvolutionChainModel from '@/model/PokemonEvolutionChainModel';
 PokemonModel;
 
 export default {
-    getPageByNumberAndSize(pageNumber, pageSize) {
+    getPageByNumberAndSize(pageNumber, pageSize, sortColumn) {
         const initialPokemonNumber = pageSize * (pageNumber - 1) + 1;
         const promises = [];
 
@@ -18,6 +18,27 @@ export default {
         }
 
         return Promise.all(promises).then((pokemonModels) => {
+            if (sortColumn != undefined && sortColumn != '') {
+                var sortOrder = 1;
+                if (sortColumn[0] === "-") {
+                    sortOrder = -1;
+                    sortColumn = sortColumn.substr(1);
+                }
+                if (sortColumn === 'id' || sortColumn === '-id') {
+
+                    return pokemonModels.sort((pokemon1, pokemon2) => {
+                        var result = pokemon1.id < pokemon2.id ? -1 : pokemon1.id > pokemon2.id ? 1 : 0;
+                        return result * sortOrder;
+                    });
+
+                } else if (sortColumn === 'name' || sortColumn === '-name') {
+                    return pokemonModels.sort((pokemon1, pokemon2) => {
+                        var result = pokemon1.name < pokemon2.name ? -1 : pokemon1.name > pokemon2.name ? 1 : 0;
+                        return result * sortOrder;
+                    });
+                }
+            }
+
             return pokemonModels.sort((pokemon1, pokemon2) => pokemon1.id > pokemon2.id);
         });
     },
@@ -60,8 +81,6 @@ export default {
             for (var i = 0; i < result.length; i++) {
                 favouritedPokemonList.push(result[i].id);
             }
-
-            console.log("favouritedPokemonList ", favouritedPokemonList);
         }).then(() => {
             favouritedPokemonList.sort((a, b) => {
                 if (a < b) return -1;

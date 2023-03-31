@@ -75,7 +75,6 @@ import { ErrorDialogHandler } from '@/store/modules/errorDialog';
 import PokemonHttpRequest from '@/http/PokemonHttpRequest';
 import PokemonEvolutionChain from '@/views/PokeDexDetailsView/components/PokemonEvolutionChain.vue';
 import PokemonTypeChip from '@/views/PokeDexDetailsView/components/PokemonTypeChip.vue';
-// import CloseButton from '@/components/button/CloseButton';
 export default {
     created() {
         var getSelectedPokemon = PokemonTableDataHandler.getSelectedPokemon(this)
@@ -91,8 +90,7 @@ export default {
     },
     components: {
         'pokemon-evolution-chain': PokemonEvolutionChain,
-        'pokemon-type-chip': PokemonTypeChip,
-        // 'close-button': CloseButton
+        'pokemon-type-chip': PokemonTypeChip
     },
     data: () => ({
         pokemonDetailsModel: null,
@@ -122,14 +120,6 @@ export default {
             return this.evolutionChainModel != null && this.evolutionChainModel.hasEvolution();
         },
         selectedPokemon() {
-            // var getSelectedPokemon = PokemonTableDataHandler.getSelectedPokemon(this)
-            // var selectedPokemonId = 0;
-            // if (getSelectedPokemon != null) {
-            //     selectedPokemonId = getSelectedPokemon.id;
-            // } else {
-            //     selectedPokemonId = sessionStorage.getItem('selectedPokemon');
-            // }
-            // PokemonStoreHttpRequest.getPokemonDataById(this, selectedPokemonId);
             return PokemonTableDataHandler.getSelectedPokemon(this);
         }
     },
@@ -185,9 +175,6 @@ export default {
 
             this.refreshInformations();
         }
-        // close() {
-        //     this.$emit('input', false);
-        // }
     }
 };
 </script>

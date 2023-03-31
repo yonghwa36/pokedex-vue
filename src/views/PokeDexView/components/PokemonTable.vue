@@ -12,9 +12,9 @@
             <template v-slot:default>
                 <thead>
                     <tr>
-                        <th class="text-left">{{ $t('number') }}</th>
+                        <th class="text-left" @click="onClickSortPokemon('id')">{{ $t('id') }}</th>
                         <th class="text-left">{{ $t('image') }}</th>
-                        <th class="text-left">{{ $t('name') }}</th>
+                        <th class="text-left" @click="onClickSortPokemon('name')">{{ $t('name') }}</th>
                         <th class="text-left">{{ $t('type') }}</th>
                         <th class="text-left"></th>
                     </tr>
@@ -52,7 +52,6 @@ import { RouteHandler } from '@/router';
 import { PokemonTableDataHandler } from '@/store/modules/pokemonTable';
 import PokemonStoreHttpRequest from '@/facade/PokemonStoreHttpRequest';
 import Configuration from '@/Configuration';
-// import favouritedList from '@/assets/favouritedList.json'
 import PokemonTypeChip from './PokemonTypeChip.vue';
 
 export default {
@@ -63,21 +62,13 @@ export default {
         return {
             favouritedPokemonList: [],
             searchText: '',
-            noOfPages: 0
+            noOfPages: 0,
+            currentSortColumn: "id",
         };
     },
     watch: {
-        // noOfPages: function (val) {
-        //     console.log("val ", val);
-
-        // }
     },
     computed: {
-        // numberOfPages() {
-        //     this.noOfPages = 1;
-        //     return Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
-        // },
-
         pokemons() {
             return PokemonTableDataHandler.getItems(this);
         },
@@ -93,10 +84,6 @@ export default {
         isLoading() {
             return PokemonTableDataHandler.isLoading(this);
         },
-
-        // favoritedPokemon() {
-        //     return PokemonTableDataHandler.getFavoritedPokemon();
-        // },
     },
     async created() {
         this.noOfPages = Math.ceil(Configuration.MAX_NUMBER_OF_POKEMONS / this.pageSize);
@@ -106,69 +93,6 @@ export default {
             }
         }).catch(err => console.log("err ", err))
         await PokemonStoreHttpRequest.refreshData(this);
-
-        // await fetch('http://localhost:3001/ids')
-        //     .then(res => {
-        //         console.log("res", res);
-        //         res.json();
-        //     })
-        //     .then(data => {
-        //         console.log('data ::=> ', data);
-        //         // this.studentsGetData = data
-        //     })
-        //     .catch(err =>
-        //         console.log("err ", err))
-
-        // await fetch('http://localhost:3001/ids', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         "id": 4
-        //     })
-        // })
-
-        // await fetch('http://localhost:3001/ids', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         "id": 3
-        //     })
-        // })
-
-
-        // await fetch(`http://localhost:3001/ids/3`,
-        //     {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then(resp => {
-        //         console.log('res ::=> ', resp.data);
-        //         resp.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-
-        // await fetch(`http://localhost:3001/ids/1`,
-        //     {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then(resp => {
-        //         console.log('res ::=> ', resp.data);
-        //         resp.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
     },
     methods: {
         onChangePageNumber(pageNumber) {
@@ -181,9 +105,6 @@ export default {
             this.$emit('clickRow', pokemon);
         },
         async onClickFavorite(pokemon) {
-            // PokemonTableDataHandler.setFavoritePokemon(this, pokemon);
-            // this.$emit('clickFavorite', pokemon);
-
             if (this.favouritedPokemonList.includes(pokemon.id)) {
                 await fetch(`http://localhost:3001/ids/${pokemon.id}`,
                     {
@@ -193,7 +114,7 @@ export default {
                             'Content-Type': 'application/json'
                         }
                     }).then(resp => {
-                        console.log('res ::=> ', resp.data);
+                        console.log(resp);
                         const indexInArray = this.favouritedPokemonList.indexOf(pokemon.id);
                         this.favouritedPokemonList.splice(indexInArray, 1);
 
@@ -220,7 +141,7 @@ export default {
                         "id": pokemon.id
                     })
                 }).then(resp => {
-                    console.log('res ::=> ', resp.data);
+                    console.log(resp);
                     fetch("http://localhost:3001/ids").then(res => res.json()).then(result => {
                         for (var i = 0; i < result.length; i++) {
                             this.favouritedPokemonList.push(result[i].id);
@@ -237,7 +158,6 @@ export default {
         },
 
         async handleInput(event) {
-            console.log(event.target.value);
             const pokemonNameStrg = event.target.value.toLowerCase().trim();
             if (pokemonNameStrg.length > 0) {
                 await PokemonStoreHttpRequest.filterDataByName(this, event.target.value);
@@ -251,6 +171,17 @@ export default {
                 }).catch(err => console.log("err ", err))
                 await PokemonStoreHttpRequest.refreshData(this);
             }
+        },
+
+        async onClickSortPokemon(columnName) {
+            if (this.currentSortColumn == columnName) {
+                this.currentSortColumn = "-" + this.currentSortColumn;
+            } else {
+                this.currentSortColumn = columnName;
+            }
+
+            await PokemonStoreHttpRequest.refreshData(this, this.currentSortColumn);
+
         }
     }
 };
