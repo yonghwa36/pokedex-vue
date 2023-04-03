@@ -16,6 +16,9 @@
                         <th class="text-left">{{ $t('image') }}</th>
                         <th class="text-left" @click="onClickSortPokemon('name')">{{ $t('name') }}</th>
                         <th class="text-left">{{ $t('type') }}</th>
+                        <th class="text-left" @click="onClickSortPokemon('hp')">{{ $t('hp') }}</th>
+                        <th class="text-left" @click="onClickSortPokemon('attack')">{{ $t('attack') }}</th>
+                        <th class="text-left" @click="onClickSortPokemon('defense')">{{ $t('defense') }}</th>
                         <th class="text-left"></th>
                     </tr>
                 </thead>
@@ -29,6 +32,9 @@
                         <td><pokemon-type-chip v-for="type in pokemon.types" :type="type.type.name"
                                 :key="type.type.name + pokemon.id"></pokemon-type-chip>
                         </td>
+                        <td>{{ pokemon.points[0].value }}</td>
+                        <td>{{ pokemon.points[1].value }}</td>
+                        <td>{{ pokemon.points[2].value }}</td>
                         <td>
                             <v-btn icon @click="onClickFavorite(pokemon)">
                                 <v-icon v-if="!favouritedPokemonList.includes(pokemon.id)">mdi-heart</v-icon>

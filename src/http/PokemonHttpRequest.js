@@ -36,6 +36,21 @@ export default {
                         var result = pokemon1.name < pokemon2.name ? -1 : pokemon1.name > pokemon2.name ? 1 : 0;
                         return result * sortOrder;
                     });
+                } else if (sortColumn === 'hp' || sortColumn === '-hp') {
+                    return pokemonModels.sort((pokemon1, pokemon2) => {
+                        var result = pokemon1.points[0].value < pokemon2.points[0].value ? -1 : pokemon1.points[0].value > pokemon2.points[0].value ? 1 : 0;
+                        return result * sortOrder;
+                    });
+                } else if (sortColumn === 'attack' || sortColumn === '-attack') {
+                    return pokemonModels.sort((pokemon1, pokemon2) => {
+                        var result = pokemon1.points[1].value < pokemon2.points[1].value ? -1 : pokemon1.points[1].value > pokemon2.points[1].value ? 1 : 0;
+                        return result * sortOrder;
+                    });
+                } else if (sortColumn === 'defense' || sortColumn === '-defense') {
+                    return pokemonModels.sort((pokemon1, pokemon2) => {
+                        var result = pokemon1.points[2].value < pokemon2.points[2].value ? -1 : pokemon1.points[2].value > pokemon2.points[2].value ? 1 : 0;
+                        return result * sortOrder;
+                    });
                 }
             }
 
