@@ -4,7 +4,19 @@
         <v-card v-if="selectedPokemon != null"><v-card-title>
                 <span class="text-h5">
                     {{ selectedPokemon.name }} <span style="color: #c0c0c0">#{{ selectedPokemon.id }}</span>
-                </span>
+                </span><v-spacer></v-spacer>
+                <v-btn icon>
+                    <ShareNetwork network="facebook" url="https://news.vuejs.org/issues/180" title="Say hi to Pokemon!"
+                        description="I’d like to introduce you to all the pokemon"
+                        quote="Visit this page to know more about Pokemon" hashtags="vuejs,vite" style="color: #1877f2;">
+                        <v-icon>mdi-facebook</v-icon>
+                    </ShareNetwork>
+                    <ShareNetwork network="twitter" url="https://news.vuejs.org/issues/180" title="Say hi to Pokemon!"
+                        description="I’d like to introduce you to all the pokemon"
+                        quote="Visit this page to know more about Pokemon" hashtags="vuejs,vite" style="color: #1da1f2;">
+                        <v-icon>mdi-twitter</v-icon>
+                    </ShareNetwork>
+                </v-btn>
             </v-card-title>
             <v-card-text>
                 <v-container>
@@ -39,12 +51,6 @@
                             <b>{{ $t('chainOfEvolution') }}</b>
                             <pokemon-evolution-chain :evolutionChain="evolutionChainModel"></pokemon-evolution-chain>
                         </v-col>
-
-                        <!-- <v-col cols="12">
-                            <b>{{ $t('games') }}</b>
-                            <br />
-                            {{ selectedPokemon.gameNames.join(', ') }}
-                        </v-col> -->
                     </v-row>
                 </v-container>
             </v-card-text>
@@ -58,11 +64,6 @@
                 <v-btn color="primary" dark outlined @click="goToNextPokemon()">
                     <v-icon left>mdi-arrow-right</v-icon>{{ $t('next') }}</v-btn>
             </v-card-actions>
-
-            <!-- <v-card-actions>
-                <v-spacer></v-spacer>
-                <close-button @click="close()"></close-button>
-            </v-card-actions> -->
         </v-card>
     </div>
 </template>

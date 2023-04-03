@@ -4,10 +4,6 @@
             <img :src="require(`../../../assets/logo-pixel.gif`)">
         </div>
         <input class="search" type="text" v-model="searchText" placeholder="Search for pokemon..." @input="handleInput" />
-        <!-- <h1>Pokemon</h1> -->
-        <!-- <p v-for="f in favouritedPokemonList" :key="f">
-            {{ f }}
-        </p> -->
         <v-simple-table dense>
             <template v-slot:default>
                 <thead>
